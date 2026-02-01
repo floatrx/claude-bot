@@ -69,20 +69,20 @@ bot.on('message', async (msg) => {
 });
 
 // /start command
-bot.onText(/\/start/, async (msg) => {
+bot.onText(/^\/start$/, async (msg) => {
   if (!isOwner(msg.chat.id)) {
     await rejectUnauthorized(msg.chat.id);
     return;
   }
   await bot.sendMessage(
     msg.chat.id,
-    `👋 <b>Claude Bot</b>\n\nRemote control for Claude Code via Telegram.\n\n<b>Commands:</b>\n/y — Approve action\n/n — Deny action\n/ping — Check if bot is alive`,
+    `👋 <b>Claude Bot</b>\n\nRemote control for Claude Code via Telegram.`,
     { parse_mode: 'HTML' }
   );
 });
 
 // /ping command
-bot.onText(/\/ping/, async (msg) => {
+bot.onText(/^\/ping$/, async (msg) => {
   if (!isOwner(msg.chat.id)) {
     await rejectUnauthorized(msg.chat.id);
     return;
@@ -91,7 +91,7 @@ bot.onText(/\/ping/, async (msg) => {
 });
 
 // /approve command
-bot.onText(/\/y/, async (msg) => {
+bot.onText(/^\/y$/, async (msg) => {
   if (!isOwner(msg.chat.id)) {
     await rejectUnauthorized(msg.chat.id);
     return;
@@ -101,13 +101,38 @@ bot.onText(/\/y/, async (msg) => {
 });
 
 // /deny command
-bot.onText(/\/n/, async (msg) => {
+bot.onText(/^\/n$/, async (msg) => {
   if (!isOwner(msg.chat.id)) {
     await rejectUnauthorized(msg.chat.id);
     return;
   }
   await deny();
   await bot.sendMessage(msg.chat.id, 'Denied');
+});
+
+// /clean command - delete recent messages
+bot.onText(/^\/clean$/, async (msg) => {
+  if (!isOwner(msg.chat.id)) {
+    await rejectUnauthorized(msg.chat.id);
+    return;
+  }
+
+  const chatId = msg.chat.id;
+  const currentMsgId = msg.message_id;
+  let deleted = 0;
+
+  // Delete messages in batches (Telegram allows deleting messages < 48h old)
+  for (let i = currentMsgId; i > currentMsgId - 100; i--) {
+    try {
+      await bot.deleteMessage(chatId, i);
+      deleted++;
+    } catch {
+      // Message doesn't exist or can't be deleted, skip
+    }
+  }
+
+  // Send confirmation (will be the only message left)
+  await bot.sendMessage(chatId, `🧹 Cleaned ${deleted} messages`);
 });
 
 // Export for external use
