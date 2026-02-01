@@ -2,7 +2,7 @@ import 'dotenv/config';
 
 export const config = {
   botToken: process.env.TG_CLAUDE_BOT_TOKEN || '',
-  chatId: process.env.TG_CHAT_ID || '',
+  chatId: process.env.OWNER_CHAT_ID || '',
   tmuxSession: process.env.TMUX_SESSION || 'claude',
 };
 
