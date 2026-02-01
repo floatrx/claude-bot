@@ -48,10 +48,10 @@ pnpm dev   # Development with hot reload
 Add to `~/.zshrc`:
 
 ```bash
-alias claude='tmux new-session -A -s claude -c "$(pwd)" claude'
+alias cc='tmux new-session -A -s claude -c "$(pwd)" claude'
 ```
 
-Now `claude` command automatically runs in tmux.
+Now `cc` command automatically runs Claude Code in tmux.
 
 ## Usage
 
@@ -76,7 +76,7 @@ When receiving a permission request, tap:
 
 ```bash
 # In your hook script
-pnpm --prefix ~/Projects/Floatrx/claude-bot send "Permission required: $MESSAGE"
+pnpm --prefix /path/to/claude-bot send "Permission required: $MESSAGE"
 ```
 
 ## Integration with Claude Code Hooks
@@ -92,7 +92,7 @@ Update `~/.claude/settings.json` to trigger notifications:
         "hooks": [
           {
             "type": "command",
-            "command": "pnpm --prefix ~/Projects/Floatrx/claude-bot send \"Claude needs permission\""
+            "command": "pnpm --prefix /path/to/claude-bot send \"Claude needs permission\""
           }
         ]
       }
