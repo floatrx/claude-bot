@@ -4,6 +4,7 @@ import { tmpdir } from 'os';
 import { join } from 'path';
 
 import { config, validateConfig } from './config.js';
+import { isSessionAvailable } from './terminal.js';
 
 validateConfig();
 
@@ -44,9 +45,12 @@ async function sendMessage(message: string, withButtons: boolean) {
   // Remove previous message first
   await deletePreviousMessage();
 
+  // Only show buttons if tmux session is active
+  const showButtons = withButtons && (await isSessionAvailable());
+
   const sent = await bot.sendMessage(config.chatId, message, {
     parse_mode: 'HTML',
-    ...(withButtons && { reply_markup: keyboard }),
+    ...(showButtons && { reply_markup: keyboard }),
   });
 
   // Save message ID for next cleanup
