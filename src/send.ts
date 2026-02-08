@@ -1,7 +1,7 @@
 import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
 import TelegramBot from 'node-telegram-bot-api';
-import { tmpdir } from 'os';
-import { join } from 'path';
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
 
 import { config, validateConfig } from './config.js';
 import { isSessionAvailable } from './terminal.js';
@@ -10,8 +10,9 @@ validateConfig();
 
 const bot = new TelegramBot(config.botToken);
 
-// File to store last message ID for cleanup
-const lastMsgFile = join(tmpdir(), `claude-bot-${config.chatId}-lastmsg`);
+// File to store last message ID for cleanup (in project root)
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const lastMsgFile = join(__dirname, '..', '.lastmsg');
 
 const keyboard = {
   inline_keyboard: [
@@ -41,6 +42,10 @@ async function deletePreviousMessage() {
   }
 }
 
+async function sendTypingIndicator() {
+  await bot.sendChatAction(config.chatId, 'typing');
+}
+
 async function sendMessage(message: string, withButtons: boolean) {
   // Remove previous message first
   await deletePreviousMessage();
@@ -59,15 +64,28 @@ async function sendMessage(message: string, withButtons: boolean) {
 
 // Parse CLI args
 const args = process.argv.slice(2);
+const typingOnly = args.includes('--typing');
 const withButtons = args.includes('--buttons');
-const message = args.filter((arg) => arg !== '--buttons').join(' ') || 'Claude needs input';
+const message = args.filter((arg) => !arg.startsWith('--')).join(' ') || 'Claude needs input';
 
-sendMessage(message, withButtons)
-  .then(() => {
-    console.log('Message sent');
-    process.exit(0);
-  })
-  .catch((err) => {
-    console.error('Failed to send:', err);
-    process.exit(1);
-  });
+if (typingOnly) {
+  sendTypingIndicator()
+    .then(() => {
+      console.log('Typing indicator sent');
+      process.exit(0);
+    })
+    .catch((err) => {
+      console.error('Failed to send typing:', err);
+      process.exit(1);
+    });
+} else {
+  sendMessage(message, withButtons)
+    .then(() => {
+      console.log('Message sent');
+      process.exit(0);
+    })
+    .catch((err) => {
+      console.error('Failed to send:', err);
+      process.exit(1);
+    });
+}

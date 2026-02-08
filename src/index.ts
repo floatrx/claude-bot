@@ -92,25 +92,30 @@ bot.on('message', async (msg) => {
 
     case '/clean': {
       const currentMsgId = msg.message_id;
-      let deleted = 0;
 
       for (let i = currentMsgId; i > currentMsgId - 100; i--) {
         try {
           await bot.deleteMessage(chatId, i);
-          deleted++;
         } catch {
           // Message doesn't exist or can't be deleted
         }
       }
-
-      await bot.sendMessage(chatId, `🧹 Cleaned ${deleted} messages`);
       break;
     }
 
     default:
-      // Text input - send to terminal (no reply, user knows what they sent)
+      // Text input - send to terminal with status indicator
       if (!text.startsWith('/')) {
+        // Show typing indicator
+        await bot.sendChatAction(chatId, 'typing');
+
         const success = await sendText(text);
+
+        // React to message with result
+        await bot.setMessageReaction(chatId, msg.message_id, {
+          reaction: [{ type: 'emoji', emoji: success ? '👍' : '👎' }],
+        });
+
         if (!success) await bot.sendMessage(chatId, `⚠️ tmux session "${config.tmuxSession}" not found`);
       }
   }
