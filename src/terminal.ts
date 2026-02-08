@@ -5,12 +5,22 @@ import { config } from './config.js';
 
 const execAsync = promisify(exec);
 
+export async function isSessionAvailable(): Promise<boolean> {
+  try {
+    await execAsync(`tmux has-session -t ${config.tmuxSession}`);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export async function sendToTerminal(keys: string): Promise<boolean> {
+  if (!(await isSessionAvailable())) return false;
+
   try {
     await execAsync(`tmux send-keys -t ${config.tmuxSession} "${keys}"`);
     return true;
-  } catch (error) {
-    console.error('tmux error:', error);
+  } catch {
     return false;
   }
 }
