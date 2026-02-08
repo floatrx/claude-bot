@@ -57,16 +57,17 @@ Now `cc` command automatically runs Claude Code in tmux.
 
 ### Bot Commands
 
-| Command | Action |
-|---------|--------|
-| `/y` | Approve (send "y" + Enter) |
-| `/n` | Deny (send "n" + Enter) |
-| `/ping` | Check if bot is running |
-| Any text | Send as input to terminal |
+| Command  | Action                     |
+| -------- | -------------------------- |
+| `/y`     | Approve (send "y" + Enter) |
+| `/n`     | Deny (send "n" + Enter)    |
+| `/ping`  | Check if bot is running    |
+| Any text | Send as input to terminal  |
 
 ### Inline Buttons
 
 When receiving a permission request, tap:
+
 - **Approve** - sends `y` + Enter
 - **Deny** - sends `n` + Enter
 - **Skip** - sends `s` + Enter
@@ -103,9 +104,9 @@ Update `~/.claude/settings.json` to trigger notifications:
 
 ## Scripts
 
-| Script | Description |
-|--------|-------------|
-| `pnpm dev` | Run with hot reload |
-| `pnpm build` | Compile TypeScript |
-| `pnpm start` | Run compiled version |
-| `pnpm send` | Send message with buttons |
+| Script       | Description               |
+| ------------ | ------------------------- |
+| `pnpm dev`   | Run with hot reload       |
+| `pnpm build` | Compile TypeScript        |
+| `pnpm start` | Run compiled version      |
+| `pnpm send`  | Send message with buttons |

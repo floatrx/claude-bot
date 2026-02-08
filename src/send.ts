@@ -1,7 +1,8 @@
+import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
 import TelegramBot from 'node-telegram-bot-api';
-import { readFileSync, writeFileSync, existsSync, unlinkSync } from 'fs';
-import { join } from 'path';
 import { tmpdir } from 'os';
+import { join } from 'path';
+
 import { config, validateConfig } from './config.js';
 
 validateConfig();

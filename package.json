@@ -11,7 +11,10 @@
     "pm2": "pm2 start ecosystem.config.cjs",
     "pm2:stop": "pm2 stop claude-bot",
     "pm2:logs": "pm2 logs claude-bot",
-    "send": "tsx src/send.ts"
+    "send": "tsx src/send.ts",
+    "lint": "eslint . --fix",
+    "pretty": "prettier --write .",
+    "prepare": "husky"
   },
   "repository": {
     "type": "git",
@@ -26,11 +29,20 @@
   "author": "floatrx",
   "license": "MIT",
   "dependencies": {
-    "@types/node": "^25.1.0",
+    "dotenv": "^17.2.4",
+    "node-telegram-bot-api": "^0.67.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^25.2.2",
     "@types/node-telegram-bot-api": "^0.64.13",
-    "dotenv": "^17.2.3",
-    "node-telegram-bot-api": "^0.67.0",
+    "eslint": "^10.0.0",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "globals": "^17.3.0",
+    "husky": "^9.1.7",
+    "prettier": "^3.8.1",
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.54.0"
   }
 }

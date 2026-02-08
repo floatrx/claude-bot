@@ -1,6 +1,7 @@
 import TelegramBot from 'node-telegram-bot-api';
+
 import { config, validateConfig } from './config.js';
-import { approve, deny, skip, escape, sendText } from './terminal.js';
+import { approve, deny, escape, sendText, skip } from './terminal.js';
 
 validateConfig();
 
@@ -74,11 +75,9 @@ bot.onText(/^\/start$/, async (msg) => {
     await rejectUnauthorized(msg.chat.id);
     return;
   }
-  await bot.sendMessage(
-    msg.chat.id,
-    `👋 <b>Claude Bot</b>\n\nRemote control for Claude Code via Telegram.`,
-    { parse_mode: 'HTML' }
-  );
+  await bot.sendMessage(msg.chat.id, `👋 <b>Claude Bot</b>\n\nRemote control for Claude Code via Telegram.`, {
+    parse_mode: 'HTML',
+  });
 });
 
 // /ping command
